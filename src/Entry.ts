@@ -1,3 +1,4 @@
+import { flatten, uniq } from 'lodash';
 import { isNotNull, isNotUndefined } from './Maybe';
 
 export interface Entry {
@@ -33,5 +34,26 @@ export function selectEntries<E extends Entry>(table: Table<E>, ids: string[]): 
   return ids.map(id => table.entriesById[id]).filter(isNotUndefined);
 }
 
-export declare function deleteEntries<E extends Entry>(table: Table<E>, ids: string[]): Table<E>;
 export declare function updateEntries<E extends Entry>(table: Table<E>, entries: E[]): Table<E>;
+
+export function deleteEntries<E extends Entry>(table: Table<E>, ids: string[]): Table<E> {
+  // Delete children first
+  const deletingIds = uniq(flatten(ids.map(id => table.childrenById[id]).filter(isNotUndefined)));
+  const newTable = deletingIds.length ? deleteEntries(table, deletingIds) : table;
+
+  const childrenById: Table<E>['childrenById'] = { ...newTable.childrenById };
+  const entriesById: Table<E>['entriesById'] = { ...newTable.entriesById };
+
+  const entries = selectEntries(newTable, ids);
+  entries.forEach(entry => {
+    if (isNotNull(entry.parentId)) {
+      childrenById[entry.parentId] = (childrenById[entry.parentId] || []).filter(
+        id => id !== entry.id,
+      );
+    }
+    delete childrenById[entry.id];
+    delete entriesById[entry.id];
+  });
+
+  return { childrenById, entriesById };
+}
