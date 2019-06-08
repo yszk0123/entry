@@ -1,5 +1,5 @@
 import { flatten, uniq } from 'lodash';
-import { isNotNull, isNotUndefined } from './Maybe';
+import { isNotNull, isNotUndefined, isUndefined } from './Maybe';
 
 export interface Entry {
   id: string;
@@ -34,7 +34,34 @@ export function selectEntries<E extends Entry>(table: Table<E>, ids: string[]): 
   return ids.map(id => table.entriesById[id]).filter(isNotUndefined);
 }
 
-export declare function updateEntries<E extends Entry>(table: Table<E>, entries: E[]): Table<E>;
+export function updateEntries<E extends Entry>(table: Table<E>, entries: E[]): Table<E> {
+  const childrenById: Table<E>['childrenById'] = { ...table.childrenById };
+  const entriesById: Table<E>['entriesById'] = { ...table.entriesById };
+
+  entries.forEach(entry => {
+    const oldEntry = entriesById[entry.id];
+    if (isUndefined(oldEntry)) {
+      return;
+    }
+
+    entriesById[entry.id] = entry;
+
+    if (entry.parentId === oldEntry.parentId) {
+      return;
+    }
+
+    if (isNotNull(entry.parentId)) {
+      childrenById[entry.parentId] = [...(childrenById[entry.parentId] || []), entry.id];
+    }
+    if (isNotNull(oldEntry.parentId)) {
+      childrenById[oldEntry.parentId] = (childrenById[oldEntry.parentId] || []).filter(
+        id => id !== oldEntry.id,
+      );
+    }
+  });
+
+  return { childrenById, entriesById };
+}
 
 export function deleteEntries<E extends Entry>(table: Table<E>, ids: string[]): Table<E> {
   // Delete children first
