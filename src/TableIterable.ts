@@ -1,5 +1,6 @@
+import { Entry } from './Entry';
 import { isNotUndefined, isUndefined } from './Maybe';
-import { Entry, Table } from './Table';
+import { Table } from './Table';
 
 export function createTableIterable<E extends Entry>(table: Table<E>, id: string): Iterable<E> {
   return {

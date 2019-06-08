@@ -1,4 +1,5 @@
-import { Entry, insertEntries, Table } from './Table';
+import { Entry } from './Entry';
+import { insertEntries, Table } from './Table';
 import { createTableIterable } from './TableIterable';
 
 interface ExampleEntry extends Entry {

@@ -1,10 +1,6 @@
 import { flatten, uniq } from 'lodash';
+import { Entry } from './Entry';
 import { isNotNull, isNotUndefined, isUndefined } from './Maybe';
-
-export interface Entry {
-  id: string;
-  parentId: string | null;
-}
 
 export interface Table<E extends Entry> {
   childrenById: {

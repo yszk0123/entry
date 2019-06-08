@@ -1,4 +1,5 @@
-import { deleteEntries, Entry, insertEntries, selectEntries, Table, updateEntries } from './Table';
+import { Entry } from './Entry';
+import { deleteEntries, insertEntries, selectEntries, Table, updateEntries } from './Table';
 
 interface ExampleEntry extends Entry {
   value: number;
