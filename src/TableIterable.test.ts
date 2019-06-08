@@ -1,5 +1,5 @@
-import { Entry, insertEntries, Table } from './Entry';
-import { createEntryIterable } from './EntryIterable';
+import { Entry, insertEntries, Table } from './Table';
+import { createTableIterable } from './TableIterable';
 
 interface ExampleEntry extends Entry {
   value: number;
@@ -23,7 +23,7 @@ function toArray<T>(iterable: Iterable<T>): T[] {
   return result;
 }
 
-describe(createEntryIterable, () => {
+describe(createTableIterable, () => {
   test('iterate empty', () => {
     const table: ExampleTable = {
       childrenById: {},
@@ -31,7 +31,7 @@ describe(createEntryIterable, () => {
     };
 
     {
-      const actual = toArray(createEntryIterable(table, ''));
+      const actual = toArray(createTableIterable(table, ''));
       expect(actual).toEqual([]);
     }
   });
@@ -41,12 +41,12 @@ describe(createEntryIterable, () => {
     const table = createTable([entry]);
 
     {
-      const actual = toArray(createEntryIterable(table, 'nonExistent-1'));
+      const actual = toArray(createTableIterable(table, 'nonExistent-1'));
       expect(actual).toEqual([]);
     }
 
     {
-      const actual = toArray(createEntryIterable(table, 'id-1'));
+      const actual = toArray(createTableIterable(table, 'id-1'));
       expect(actual).toEqual([entry]);
     }
   });
@@ -57,17 +57,17 @@ describe(createEntryIterable, () => {
     const table = createTable([parent, child]);
 
     {
-      const actual = toArray(createEntryIterable(table, 'nonExistent-1'));
+      const actual = toArray(createTableIterable(table, 'nonExistent-1'));
       expect(actual).toEqual([]);
     }
 
     {
-      const actual = toArray(createEntryIterable(table, 'parent-1'));
+      const actual = toArray(createTableIterable(table, 'parent-1'));
       expect(actual).toEqual([parent, child]);
     }
 
     {
-      const actual = toArray(createEntryIterable(table, 'child-1'));
+      const actual = toArray(createTableIterable(table, 'child-1'));
       expect(actual).toEqual([child]);
     }
   });

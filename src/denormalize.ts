@@ -1,5 +1,5 @@
-import { Entry, Table } from './Entry';
 import { isNotUndefined } from './Maybe';
+import { Entry, Table } from './Table';
 
 export interface DenormalizedEntry<E extends Entry> extends Entry {
   children: DenormalizedEntry<E>[];

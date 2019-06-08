@@ -1,7 +1,7 @@
-import { Entry, Table } from './Entry';
 import { isNotUndefined, isUndefined } from './Maybe';
+import { Entry, Table } from './Table';
 
-export function createEntryIterable<E extends Entry>(table: Table<E>, id: string): Iterable<E> {
+export function createTableIterable<E extends Entry>(table: Table<E>, id: string): Iterable<E> {
   return {
     *[Symbol.iterator]() {
       let entry = table.entriesById[id];
