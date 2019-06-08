@@ -1,4 +1,4 @@
-import { isNotNull } from './Maybe';
+import { isNotNull, isNotUndefined } from './Maybe';
 
 export interface Entry {
   id: string;
@@ -29,6 +29,9 @@ export function insertEntries<E extends Entry>(table: Table<E>, entries: E[]): T
   return { childrenById, entriesById };
 }
 
+export function selectEntries<E extends Entry>(table: Table<E>, ids: string[]): E[] {
+  return ids.map(id => table.entriesById[id]).filter(isNotUndefined);
+}
+
 export declare function deleteEntries<E extends Entry>(table: Table<E>, ids: string[]): Table<E>;
 export declare function updateEntries<E extends Entry>(table: Table<E>, entries: E[]): Table<E>;
-export declare function selectEntries<E extends Entry>(table: Table<E>, ids: string[]): E[];
